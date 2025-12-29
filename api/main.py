@@ -2,6 +2,11 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import cloudscraper
 import xml.etree.ElementTree as ET
+from db.mongo import get_recipes, get_recipe_by_id
+from fastapi import HTTPException
+from bson.errors import InvalidId
+
+
 
 from db.postgres import insert_urls
 from utils.mailer import send_email
@@ -59,3 +64,29 @@ def upload_sitemap(data: SitemapRequest):
         "message": "URLs queued successfully",
         "total_urls": len(urls)
     }
+
+
+@app.get("/recipes")
+def list_recipes(limit: int = 20):
+    data = get_recipes(limit)
+    for r in data:
+        r["_id"] = str(r["_id"])
+    return data
+
+
+@app.get("/recipes/{recipe_id}")
+def get_recipe(recipe_id: str):
+    try:
+        recipe = get_recipe_by_id(recipe_id)
+    except InvalidId:
+        raise HTTPException(400, "Invalid recipe ID")
+
+    if not recipe:
+        raise HTTPException(404, "Recipe not found")
+
+    recipe["_id"] = str(recipe["_id"])
+    return recipe
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
