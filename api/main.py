@@ -34,6 +34,11 @@ def fetch_sitemap_urls(sitemap_url: str):
     return [loc.text for loc in locs if loc is not None]
 
 
+@app.get("/")
+def root():
+    return {"status": "Cookit Scraper API is running"}
+
+
 @app.post("/upload-sitemap")
 def upload_sitemap(data: SitemapRequest):
     urls = fetch_sitemap_urls(data.sitemap_url)
