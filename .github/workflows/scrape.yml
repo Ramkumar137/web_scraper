@@ -1,9 +1,10 @@
 name: Cookit Recipe Scraper
 
 on:
-  workflow_dispatch:        # manual trigger (button)
+  workflow_dispatch:
   schedule:
-    - cron: "0 3 * * 1"     # every Monday at 03:00 UTC
+    - cron: "30 3 * * *"   # daily at 9:00 AM IST
+
 
 jobs:
   scrape:
