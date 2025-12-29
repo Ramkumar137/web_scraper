@@ -3,13 +3,11 @@ from recipe_scrapers import scrape_html
 
 from db.postgres import fetch_next_url, mark_done, mark_failed
 from db.mongo import save_recipe
-
-from db.postgres import fetch_next_url, mark_done, mark_failed
-from db.mongo import save_recipe
 from utils.delay import polite_sleep
 from utils.mailer import send_email
 
-def fetch_recipe_data(url):
+
+def fetch_recipe_data(url: str) -> dict:
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
@@ -35,7 +33,6 @@ def fetch_recipe_data(url):
         "total_time_minutes": total_time,
         "nutrients": scraper.nutrients(),
         "original_url": url,
-        "status": "success"
     }
 
     if not data["ingredients"]:
@@ -44,26 +41,41 @@ def fetch_recipe_data(url):
     return data
 
 
-print("🚀 Scraper worker started")
+def main():
+    print("🚀 Scraper batch started")
 
-while True:
-    job = fetch_next_url()
+    processed = 0
+    failed = 0
 
-    if not job:
+    while True:
+        job = fetch_next_url()
+
+        if not job:
+            print("✅ Queue empty. Scraping finished.")
+            break
+
+        job_id, url = job
+        print(f"📥 Scraping: {url}")
+
+        try:
+            recipe = fetch_recipe_data(url)
+            save_recipe(recipe)
+            mark_done(job_id)
+            processed += 1
+            print("✅ Saved & marked done")
+
+        except Exception as e:
+            failed += 1
+            print(f"❌ Failed: {e}")
+            mark_failed(job_id)
+
         polite_sleep()
-        continue
 
-    job_id, url = job
-    print(f"📥 Scraping: {url}")
+    print("📊 Scraping summary")
+    print(f"   ✔ Success: {processed}")
+    print(f"   ✖ Failed : {failed}")
+    print("🏁 Scraping completed")
 
-    try:
-        recipe = fetch_recipe_data(url)
-        save_recipe(recipe)
-        mark_done(job_id)
-        print("✅ Saved & removed from queue")
 
-    except Exception as e:
-        print("❌ Error:", e)
-        mark_failed(job_id)
-
-    polite_sleep()
+if __name__ == "__main__":
+    main()
