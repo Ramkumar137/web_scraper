@@ -1,0 +1,45 @@
+# =========================
+# Python bytecode
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+
+# =========================
+# Virtual environments
+# =========================
+venv/
+env/
+.venv/
+.ENV/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+
+# =========================
+# Local test scripts (DO NOT COMMIT)
+# =========================
+test_queue.py
+test_mongo.py
+
+# =========================
+# IDE / Editor configs
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# OS generated files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log

@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+requests
+cloudscraper
+psycopg2-binary
+pymongo
+recipe-scrapers
+python-dotenv
