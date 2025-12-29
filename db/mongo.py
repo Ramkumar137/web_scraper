@@ -5,12 +5,21 @@ MONGO_URI = os.getenv("MONGO_URI")
 if not MONGO_URI:
     raise RuntimeError("MONGO_URI not set")
 
-client = MongoClient(MONGO_URI)
+# client = MongoClient(MONGO_URI)
+
+client = MongoClient(
+    MONGO_URI,
+    tls=True,
+    tlsAllowInvalidCertificates=True,
+    serverSelectionTimeoutMS=5000
+)
+
 db = client["cookit"]
 recipes = db["recipes"]
 
 def save_recipe(data: dict):
     recipes.insert_one(data)
+
 
 from bson import ObjectId
 
