@@ -91,7 +91,3 @@ def get_recipe(recipe_id: str):
 def health_check():
     return {"status": "healthy"}
 
-@app.get("/mongo-health")
-def mongo_health():
-    recipes.find_one()
-    return {"mongo": "ok"}
