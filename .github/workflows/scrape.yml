@@ -30,8 +30,9 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          cd web_scraper
-          PYTHONPATH=$(pwd) python worker/scraper.py
+          python worker/scraper.py
+
 
 
