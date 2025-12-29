@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import cloudscraper
 import xml.etree.ElementTree as ET
-from db.mongo import get_recipes, get_recipe_by_id
+from db.mongo import get_recipes, get_recipe_by_id, recipes
 from fastapi import HTTPException
 from bson.errors import InvalidId
 
@@ -90,3 +90,8 @@ def get_recipe(recipe_id: str):
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+
+@app.get("/mongo-health")
+def mongo_health():
+    recipes.find_one()
+    return {"mongo": "ok"}
