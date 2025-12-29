@@ -32,7 +32,7 @@ jobs:
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          python worker/scraper.py
+          python -m worker.scraper
 
 
 
