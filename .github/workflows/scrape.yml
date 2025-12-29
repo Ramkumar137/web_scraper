@@ -30,5 +30,7 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          PYTHONPATH: .
         run: |
           python worker/scraper.py
+
